@@ -130,9 +130,13 @@ export default function AdminDashboard() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login failed:", error);
-      setNotification({ message: "Login failed, please try again.", type: 'error' });
+      if (error.code === 'auth/popup-closed-by-user') {
+        setNotification({ message: "Sign-in popup was closed. Please try again and complete the sign-in.", type: 'error' });
+      } else {
+        setNotification({ message: error.message || "Login failed, please try again.", type: 'error' });
+      }
     }
   };
 
@@ -376,6 +380,11 @@ export default function AdminDashboard() {
           </div>
           <h2 className="text-2xl font-black text-gray-900 mb-2">Enterprise Admin</h2>
           <p className="text-gray-500 mb-8">Sign in for operational control</p>
+          {notification && (
+            <div className={`mb-4 p-3 rounded-xl border flex items-center gap-2 text-sm text-left ${notification.type === 'error' ? 'bg-rose-50 border-rose-500 text-rose-800' : 'bg-green-50 border-green-500 text-green-800'}`}>
+              <span className="font-bold">{notification.message}</span>
+            </div>
+          )}
           <button 
             onClick={handleLogin}
             className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-all shadow-lg flex items-center justify-center gap-3"
