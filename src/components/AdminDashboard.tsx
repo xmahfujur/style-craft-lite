@@ -134,6 +134,8 @@ export default function AdminDashboard() {
       console.error("Login failed:", error);
       if (error.code === 'auth/popup-closed-by-user') {
         setNotification({ message: "Sign-in popup was closed. Please try again and complete the sign-in.", type: 'error' });
+      } else if (error.code === 'auth/popup-blocked') {
+        setNotification({ message: "Popup blocked by your browser. Please allow popups for this site, or open the app in a new tab to sign in.", type: 'error' });
       } else {
         setNotification({ message: error.message || "Login failed, please try again.", type: 'error' });
       }
