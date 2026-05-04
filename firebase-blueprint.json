@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "A customer order for shirts",
+      "type": "object",
+      "properties": {
+        "customerName": {
+          "type": "string",
+          "description": "Full name of the customer"
+        },
+        "address": {
+          "type": "string",
+          "description": "Shipping address"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Contact number"
+        },
+        "items": {
+          "type": "array",
+          "description": "List of shirts ordered"
+        },
+        "size": {
+          "type": "string",
+          "description": "Selected shirt size (S, M, L, XL, XXL)"
+        },
+        "shippingLocation": {
+          "type": "string",
+          "enum": ["inside_dhaka", "outside_dhaka"],
+          "description": "Shipping location for price calculation"
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "Total order price including shipping"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+          "description": "Current status of the order"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the order was placed"
+        }
+      },
+      "required": ["customerName", "address", "phoneNumber", "items", "size", "shippingLocation", "totalPrice", "status", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A shirt available for purchase",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "regularPrice": { "type": "number" },
+        "image": { "type": "string" },
+        "color": { "type": "string" },
+        "priority": { "type": "string", "enum": ["high", "medium", "normal"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "regularPrice", "image"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Global application configuration",
+      "type": "object",
+      "properties": {
+        "metaPixelId": { "type": "string", "description": "Meta Pixel ID for tracking" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "An administrative user",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "permissions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "permissions"]
+    }
+  },
+  "firestore": {
+    "/admins/{email}": {
+      "schema": "Admin",
+      "description": "Collection of administrators authorized to manage the system"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of all customer orders"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of all available products"
+    },
+    "/settings/config": {
+      "schema": "AppSettings",
+      "description": "Global settings for the application"
+    }
+  }
+}
